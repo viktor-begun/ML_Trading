@@ -31,9 +31,13 @@ _*_ The _best profit_ can be defined in different ways, so one has to adopt a sp
   
   if (future_high < current_high - L2)and(future_low < current_low - L1) then sell else do_nothing
 
-Here, L1 and L2  are optimizabe variables got the SGMM
+Here, L1 and L2  are optimizabe variables for the SGMM
 
-# SOTM section
+# SOTM section (pending)
 
-# SGMM section
+this code to be carried over from the old implementation in to python separate module.
+
+# SGMM section (pending)
+
+this code to be carried over from the old implementation in to python separate module.
  
