@@ -11,7 +11,7 @@ The **third** part, Steepest Gradient Minimization Manager (**SGMM**). Given the
 - Implement SGMM model which can refine CASM and SOTM models self consistently in their variables space to get the best profit
 
 
-_*_ The _best profit_ can be defined in different ways, so one has to adopt a specific definition here. For the time being the most consistent profit as a function of time is a preferrence, but it can be varied. 
+_*_ The _best profit_ can be defined in different ways, so one has to adopt a specific definition here. For the time being the most consistent profit the we define is _the most linear in time and the highest in absolute value as a function of time_. The definition is still somewhat vague, we should consider more details here.
 
 
 # CASM section
