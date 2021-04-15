@@ -1,0 +1,170 @@
+Note: this file contains description of all of the Model Variable (MV) for the current
+model. Each MV can be either optimizeable or not, which is reflected in the 4th line
+after '----' line. 
+Note: enabling some variables may override the variability of the others. E.g., if 
+FLots is set as optimizeable, SGMM will be varying it using steepest gradient descent.
+But if, at the same time, FflgRiskBased is set to TRUE, then the value of the FLots
+in each individual trade will be calculate by the SOTM model, thus invalidating the
+SGMM search over the FLots variable. The prevention of such conflicts is solely a 
+resposibility of the researched and it is not addressed in the framework!
+Currently, if FflgRiskBased = TRUE, FflgOptimizeable has to be set FALSE for: 
+FLots
+------------------
+0.00001
+double
+FPip, absolute
+false
+------------------
+20
+integer
+FSpread, in pips
+false
+------------------
+-0.003
+double
+FSwapShort, in parts annual
+false
+------------------
+-0.019
+double
+FSwapLong, in parts annual
+false
+------------------
+100000
+double
+FLotSize
+false
+------------------
+0.1
+double
+FLots, 1lot=100000units
+false
+------------------
+400
+integer
+FLeverage, as 1:FLeverage
+false
+------------------
+300
+integer
+FStopLoss, in pips
+false
+50
+300
+1
+1
+1
+true
+------------------
+300
+integer
+FTakeProfit, in pips
+false
+50
+300
+1
+1
+1
+true
+------------------
+100000
+double
+FBalance, in absolute units
+false
+------------------
+1
+boolean
+FflgRiskBased, how volumes traded are calculated
+false
+------------------
+1.0
+double
+FRiskPercent, % from the Equity for the new orderd, if FflgRiskBased=TRUE 
+false
+0.2
+2
+0.0375
+0.01
+0.5
+false
+------------------
+0.01
+double
+FMinLots, smallest number of lots allowed to trade
+false
+------------------
+10
+double
+FMaxLots, biggest number of lots allowed to trade
+false
+------------------
+0.01
+double
+FLotStep, smallest value by which FLots can vary
+false
+------------------
+0
+boolean
+FflgTrailingStop, use trailing stop or not
+false
+------------------
+0
+double
+FComission, may be collected by some brokers
+false
+------------------
+5000
+integer
+FMaxOrderCnt, max number of orders allowed to have opened simultaneously
+false
+1
+10
+1
+1
+1
+true
+------------------
+99.78000
+integer
+FBolBandPeriod, period of the indicator
+true
+10
+100
+1
+1
+1
+true
+------------------
+1.73800
+double
+FBBWeightSL, weight factor of BB indicator for SL levels
+true
+0.1
+2.0
+0.005
+0.01
+0.5
+true
+------------------
+1.31600
+double
+FBBWeightTP, weight factor of BB indicator for TP levels
+true
+0.1
+2.0
+0.005
+0.01
+0.5
+true
+------------------
+5.0
+double
+FReduceSLPerc, max percentage on which SL levels can be reduced in order to accomodate a new order within FRiskPercent
+true
+1
+10
+0.005
+0.001
+0.5
+true
+------------------

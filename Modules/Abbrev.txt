@@ -1,0 +1,21 @@
+MCMC - Markov Chain Monte Carlo
+MET - Market Entrance Time 
+MCH - Market Charts History
+MCSW - Markov Chain Single Walker
+MCWM - Markov Chain Walker Manager
+IPTF - Inter-Process Text File
+AADF - Advanced Account Details File
+PDP - Predictability Data Pipe
+NN - Neural Network
+MSE - Mean Square Error
+EVH - Extended Variable History (file extention)
+
+CASM - Chart Analyzer and Signal Maker
+SOTM - Strategy Optimizer and Testring Manager
+DPF - Data Pipe File
+DP - Data Pipe (essentially a DPF)
+MVF - Model Variables File
+TDF - Trades Details File
+TSF - Trading Signal File
+MPM - Market Prediction Model (the one that CASM uses)
+TSM - Trading Simulation Model (the one that SOTM uses)
