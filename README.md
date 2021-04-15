@@ -1,4 +1,4 @@
-# ML_Traiding
+# ML_Trading
 # Project objectives.
 The project's main objective is to make a tool that can do autotrading on FOREX market with more than average **profit**.<br /> 
 This goal can be split in parts. In this approach, the **first** part is a Chart Analaser and Signal Maker (**CASM**) which is a model that looks at the historical data (and whatever extra data input is important) and tries to its best to predict near future market move. The CASM model should generate signals "buy", "sell" or "do nothing".<br /><br />
