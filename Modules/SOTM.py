@@ -11,19 +11,30 @@ class TSOTM(TBaseClass):
     # this is the trading simulation model
     TSM = TTSModel()
     
+    # Trading Signal File, in this implementation we will use lists, not the memory mapped files
+    # CASM will be building this list and sending to SOTM for analysis
+    TSF = []
+    
     # ------------------------ METHODS ------------------------ 
     # Load settings
     def LoadSettings(self):
-        # here settSOTM.ini to be opened and parameter to be read
-        return True;
+       # here settSOTM.ini to be opened and parameter to be read
+        try:
+            self.FSett = open('settSOTM.ini')
+            set1 = self.FSett.readline()
+            set2 = self.FSett.readline()
+            set3 = self.FSett.readline()
+        except:
+            resturn False
+        return True
         
     # Init any starting state
     def __init__(self, _FErrorLogFName):
         super().__init__()  # call parent method inherited init first
-        FErrorLogFName = _FErrorLogFName
+        self.FErrorLogFName = _FErrorLogFName
         # read all settings for this optimization
-        if not LoadSettings:
-            LogError("Error while loading settings")
+        if not self.LoadSettings:
+            self.LogError("Error while loading settings")
             
     # The base functionality class declares the message-type interaction between the instances of different classes
     # The parent class shall implement its way of processing of the received messages

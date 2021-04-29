@@ -7,25 +7,35 @@ class TSGMM(TBaseClass):
     MsgToCASM = None 
     ETot = FTotalEnergy         # structure for total energy being minimized
     CycleCount = 0              # counter of the completed optimization iterations
-    
+    FSett = None                # settings file variable
     
     # This will load all settings required for the calculations from a disk data file ('settSGMM.ini')
     def LoadSettings(self):
-    
+        # here settSGMM.ini to be opened and parameter to be read
+        try:
+            self.FSett = open('settSGMM.ini')
+            set1 = self.FSett.readline()
+            set2 = self.FSett.readline()
+            set3 = self.FSett.readline()
+        except:
+            resturn False
+        return True
+        
     # Prepare the simulations
     def __init__(self):
         super().__init__()  # call parent method inherited init first
         
         # 1 - INIT BASIC VARIABLES
         self.Log(0, 'SGMM cycle started');
-        CycleCount = 0
+        self.CycleCount = 0
         for i in range(0,99999):    # not an elegant way, but doing this I can get a fixed size of the Etot.Hist
-            Etot.Hist.append([0.0, 0])   # array of the fixed large size to avoid exc essive memory expansion in runtime
-        Etot.StuckCnt = 0;
-        Etot.GlobalMin = 1e9;
+            self.Etot.Hist.append([0.0, 0])   # array of the fixed large size to avoid exc essive memory expansion in runtime
+        self.Etot.StuckCnt = 0;
+        self.Etot.GlobalMin = 1e9;
         
         # 2 - LOAD ALL SETTING FOR THE CALCULATIONS
-        self.LoadSettings()
+        if not self.LoadSettings():
+            LogError('Error while loading settings. Check if file settSGMM.ini exists')
         
         # 3 - CHECK WHETHER ALL REQUIRED FILES EXIST
         
@@ -71,7 +81,7 @@ class TSGMM(TBaseClass):
         # here the profit curves from SOTM (TDF file) is analyzed and variables are varied/adjusted
     
     # The base functionality class declares the message-type interaction between the instances of different classes
-    # The parent class shall implement its way of processing of the received messages
+    # The parent class shall implement its way of processing received messages
     #   enum parameter is the Message it has received, see EnumTypes.py
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
@@ -80,7 +90,7 @@ class TSGMM(TBaseClass):
         elif enum = PM_SOTM_READY:
             # once SOTM finished simulation of the trading, analyze the results, decide whether to keep the
             # variables or to roll them back and apply new variations
-            AnalyzeCycle()
+            self.AnalyzeCycle()
             # when cyccle was completed and variables have been varied, start next cycle by messaging to CASM
-            MsgToCASM(PM_CASMSTARTCYCLE)
+            self.MsgToCASM(PM_CASMSTARTCYCLE)
         elif enum = 

@@ -12,6 +12,7 @@ class Msg(Enum):
     PM_WRITEVAR = auto()       # SGMM message to CASM to write all CASM model variables to the MVF file
     PM_CLOSE = auto()
     PM_VARSTARTIND = auto()    # starting from which index in MVF SOTM/CASM has to read its variables.
+    PM_TSF_OBJ = auto()        # m essage with which the TSF list object is passed
     
 # Enumerator for the SGMM self-consistent cycles tasks 
 class CycleTask(Enum):

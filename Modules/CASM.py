@@ -11,21 +11,36 @@ class TCASM(TBaseClass):
     # this is the predictive model (e.g., ARIMA, NN etc.)
     MPM = TMPModel()
     
+    # other variables
+    FSett = None    # settings file variable
+    TSF = []        # Trading Signal File, in this implementation we will use lists, not the memory mapped files
+    
     # ------------------------ METHODS ------------------------ 
     # Load settings
     def LoadSettings(self):
         # here settCASM.ini to be opened and parameter to be read
-        return True;
+        try:
+            self.FSett = open('settCASM.ini')
+            set1 = self.FSett.readline()
+            set2 = self.FSett.readline()
+            set3 = self.FSett.readline()
+        except:
+            resturn False
+        return True
     
     # Init any starting state
     def __init__(self, _FErrorLogFName):
         super().__init__()  # call parent method inherited init first
-        FErrorLogFName = _FErrorLogFName
+        self.FErrorLogFName = _FErrorLogFName
         # read all settings for this optimization
-        if not LoadSettings:
+        if not LoadSettings():
             LogError("Error while loading settings")    
         # init model that is used to predict market move (ARIMA etc.)
-        MPM.InitModel()        
+        if not self.MPM.InitModel():
+            LogError("Failed to initialize Marker Prediction Model, check if VarFile.dat exists")
+        # TSF is a python list, send it to SOTM
+        
+        
     
     # The base functionality class declares the message-type interaction between the instances of different classes
     # The parent class shall implement its way of processing of the received messages
@@ -33,17 +48,18 @@ class TCASM(TBaseClass):
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
         if  enum = PM_INIT:
-            # do init
+            # do init. Note: in python __init__ is automatically called upon creating a class instance.
+            # just in case we need to re-init, keep  this message
             __init__(self, "CASMerr.log")
         elif enum = PM_CASMSTARTCYCLE:
-            # here the PM should be called which will generate expectations on the market moving direction
+            # here the MPM should be called which will generate expectations on the market moving direction
             # for every data point (except truncated start) using current implementation (ARIMA, MA, 
             # Bollinger Bands, LSTM, etc.)
-            MPM.RunModel()
+            self.MPM.RunModel()
             # after market move expectations have been generated, the trading signals should be generated next
             GenerateSignals()
-            # after trading sygnals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
-            MsgToSOTM(PM_CASM_READY)
+            # after trading signals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
+            self.MsgToSOTM(PM_CASM_READY)
         elif enum = 
     
     # Here, the trading signal for the given history will be generated and writtent to a TSF and SOTM object

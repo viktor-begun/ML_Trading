@@ -11,8 +11,8 @@ class TBaseClass(object):
 
     # Init any starting state
     def __init__(self, _FErrorLogFName, _FEventLongName):
-        FErrorLogFName = _FErrorLogFName
-        FEventLogName = _FEventLongName
+        self.FErrorLogFName = _FErrorLogFName
+        self.FEventLogName = _FEventLongName
        
     # The base functionality class declares the message-type interaction between the instances of different classes
     # The parent class shall implement its way of processing of the received messages
