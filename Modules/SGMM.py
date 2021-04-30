@@ -85,12 +85,16 @@ class TSGMM(TBaseClass):
     #   enum parameter is the Message it has received, see EnumTypes.py
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
+        # echo message for debugging
         if  enum = PM_ECHO:
-            # debugging
+            print('Echo back')
+        # restarting cycle once SOTM finished
         elif enum = PM_SOTM_READY:
             # once SOTM finished simulation of the trading, analyze the results, decide whether to keep the
             # variables or to roll them back and apply new variations
             self.AnalyzeCycle()
             # when cyccle was completed and variables have been varied, start next cycle by messaging to CASM
             self.MsgToCASM(PM_CASMSTARTCYCLE)
-        elif enum = 
+        # starting the first cycle of calculations
+        elif enum = PM_CASMSTARTCYCLE:
+            
