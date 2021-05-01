@@ -34,10 +34,10 @@ class TCASM(TBaseClass):
         self.FErrorLogFName = _FErrorLogFName
         # read all settings for this optimization
         if not LoadSettings():
-            LogError("Error while loading settings")    
+            self.LogError("Error while loading settings")    
         # init model that is used to predict market move (ARIMA etc.)
         if not self.MPM.InitModel():
-            LogError("Failed to initialize Marker Prediction Model, check if VarFile.dat exists")
+            self.LogError("Failed to initialize Marker Prediction Model, check if VarFile.dat exists")
         # TSF is a python list, send it to SOTM
         
         
@@ -50,16 +50,16 @@ class TCASM(TBaseClass):
         if  enum = PM_INIT:
             # do init. Note: in python __init__ is automatically called upon creating a class instance.
             # just in case we need to re-init, keep  this message
-            __init__(self, "CASMerr.log")
+            self.__init__(self, "CASMerr.log")
         elif enum = PM_CASMSTARTCYCLE:
             # here the MPM should be called which will generate expectations on the market moving direction
             # for every data point (except truncated start) using current implementation (ARIMA, MA, 
             # Bollinger Bands, LSTM, etc.)
             self.MPM.RunModel()
             # after market move expectations have been generated, the trading signals should be generated next
-            GenerateSignals()
+            self.GenerateSignals()
             # after trading signals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
-            self.MsgToSOTM(PM_CASM_READY)
+            self.MsgToSOTM(PM_CASM_READY, TSF)
         elif enum = 
     
     # Here, the trading signal for the given history will be generated and writtent to a TSF and SOTM object

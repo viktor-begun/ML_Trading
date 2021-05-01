@@ -15,6 +15,11 @@ class TSOTM(TBaseClass):
     # CASM will be building this list and sending to SOTM for analysis
     TSF = []
     
+    # Trades Details File, this file (list) is written by the TSM model and contains the results
+    # of simulated trading entries on the current history DPP file. This will show when a given trade 
+    # was made, how big was it, when it was closed and profit/loss amount
+    TDF = []
+    
     # ------------------------ METHODS ------------------------ 
     # Load settings
     def LoadSettings(self):
@@ -25,7 +30,7 @@ class TSOTM(TBaseClass):
             set2 = self.FSett.readline()
             set3 = self.FSett.readline()
         except:
-            resturn False
+            return False
         return True
         
     # Init any starting state
@@ -42,8 +47,15 @@ class TSOTM(TBaseClass):
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
         if  enum = PM_INIT:
-            # do init
+            # do init. Note: in python __init__ is automatically called upon creating a class instance.
+            # just in case we need to re-init, keep  this message
             __init__(self, "SOTMerr.log")
         elif enum = PM_CASM_READY:
             # by now, CASM should have finished writting into TSF and we ready to simulate trading
-            # on the given history DPF
+            # on the given history DPF. For this message param points to the CASM's TSF list
+            self.TSF = param
+            # test the obtained TSF in virtual trading on the given history DPP
+            self.TSM.RunModel()
+            # once finished, the model will generate TDF list which we need to pass further to SGMM for 
+            # analysis
+            self.MsgToSGMM(PM_SOTM_READY, TDF)
