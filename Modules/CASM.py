@@ -14,6 +14,7 @@ class TCASM(TBaseClass):
     # other variables
     FSett = None    # settings file variable
     TSF = []        # Trading Signal File, in this implementation we will use lists, not the memory mapped files
+    DPF = []        # Data Pipe File, raw trading history file/list. It is provided by SGMM
     
     # ------------------------ METHODS ------------------------ 
     # Load settings
@@ -48,18 +49,23 @@ class TCASM(TBaseClass):
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
         if  enum = PM_INIT:
+            # Market Prediction Results, the MPM model will write to thil list the results of its analysis
+            # this list is temporary and it can be kept local to this routine
+            MPR = []
             # do init. Note: in python __init__ is automatically called upon creating a class instance.
             # just in case we need to re-init, keep  this message
             self.__init__(self, "CASMerr.log")
         elif enum = PM_CASMSTARTCYCLE:
+            # for this message the param is pointing to a DPF data pipe file, i.e., raw price historic chart
+            self.DPF = param
             # here the MPM should be called which will generate expectations on the market moving direction
             # for every data point (except truncated start) using current implementation (ARIMA, MA, 
             # Bollinger Bands, LSTM, etc.)
-            self.MPM.RunModel()
+            self.MPM.RunModel(self.DPF, MPR)
             # after market move expectations have been generated, the trading signals should be generated next
-            self.GenerateSignals()
+            self.GenerateSignals(MPR, self.TSF)
             # after trading signals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
-            self.MsgToSOTM(PM_CASM_READY, TSF)
+            self.MsgToSOTM(PM_CASM_READY, self.TSF)
         elif enum = 
     
     # Here, the trading signal for the given history will be generated and writtent to a TSF and SOTM object

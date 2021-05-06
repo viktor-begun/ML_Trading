@@ -18,4 +18,5 @@ MVF - Model Variables File
 TDF - Trades Details File
 TSF - Trading Signal File
 MPM - Market Prediction Model (the one that CASM uses)
+MPR - Market Prediction Results
 TSM - Trading Simulation Model (the one that SOTM uses)
