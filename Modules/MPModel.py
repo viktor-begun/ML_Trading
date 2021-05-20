@@ -33,3 +33,4 @@ class TMPModel:
     # the analysis using cuurent implementation (ARIMA, BB, LSTM, etc.) to provide a number of values 
     # characterising each historical tick of data (e.g., predictions, expectations, sentiments, etc.)
     def RunModel(self, DPF, MPR):
+        # add here simple moving average implementation

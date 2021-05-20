@@ -5,17 +5,17 @@ import EnumTypes
 import sys
 
 # create three instances that will work together on the trading model
-SGMM = TSGMM()
+SGMM = TSGMM("SGMMerr.log", "SGMM.log")
 if SGMM.LastError !=  '':
     print(SGMM.LastError)
     print("Errors detected in SGMM, process stopped")
     sys.exit()
-CASM = TCASM()
+CASM = TCASM("CASMerr.log", "CASM.log")
 if CASM.LastError !=  '':
     print(CASM.LastError)
     print("Errors detected in CASM, process stopped")
     sys.exit()
-SOTM = TSOTM()
+SOTM = TSOTM("SOTMerr.log", "SOTM.log")
 if SOTM.LastError !=  '':
     print(SOTM.LastError)
     print("Errors detected in SOTM, process stopped")
@@ -23,6 +23,7 @@ if SOTM.LastError !=  '':
 
 # for correct functionality, these three instances need to know the communicating methods
 SGMM.MsgToCASM = CASM.ProcessMsg()
+SGMM.MsgToSOTM = SOTM.ProcessMsg()
 CASM.MsgToSOTM = SOTM.ProcessMsg()
 SOTM.MsgToSGMM = SGMM.ProcessMsg()
 

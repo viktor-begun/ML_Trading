@@ -34,9 +34,8 @@ class TSOTM(TBaseClass):
         return True
         
     # Init any starting state
-    def __init__(self, _FErrorLogFName):
-        super().__init__()  # call parent method inherited init first
-        self.FErrorLogFName = _FErrorLogFName
+    def __init__(self, _FErrorLogFName, _FEventLongName):
+        super().__init__(_FErrorLogFName, _FEventLongName)  # call parent method inherited init first
         # read all settings for this optimization
         if not self.LoadSettings:
             self.LogError("Error while loading settings")
@@ -46,10 +45,17 @@ class TSOTM(TBaseClass):
     #   enum parameter is the Message it has received, see EnumTypes.py
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
+        # initialize 
         if  enum = PM_INIT:
             # do init. Note: in python __init__ is automatically called upon creating a class instance.
             # just in case we need to re-init, keep  this message
             __init__(self, "SOTMerr.log")
+            
+        # return last error
+        elif enum = PM_GETLASTERROR:
+            return self.FLastError
+            
+        # CASM gave us results, start virtual trading simulation
         elif enum = PM_CASM_READY:
             # by now, CASM should have finished writting into TSF and we ready to simulate trading
             # on the given history DPF. For this message param points to the CASM's TSF list
@@ -59,3 +65,4 @@ class TSOTM(TBaseClass):
             # once finished, the model will generate TDF list which we need to pass further to SGMM for 
             # analysis
             self.MsgToSGMM(PM_SOTM_READY, TDF)
+        
