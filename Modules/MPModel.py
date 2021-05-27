@@ -3,19 +3,15 @@
 
 class TMPModel:
     # ------------------------ VARIABLES ------------------------
-    VarFile = None # file containing variables for the model
     
     def InitModel(self):
+        FSett = None    # settings file variable
+    
         # here VarFile.dat to be opened for reading model variables
         try:
-            self.VarFile = open('VarFile.dat', 'r')
-            # skip comments
-            for i in range(0,3):
-                self.VarFile.readline()
-            # read variables
-            set1 = self.VarFile.readline()
-            set2 = self.VarFile.readline()
-            set3 = self.VarFile.readline()
+            FSett = open('CASMVarFile.dat', 'r')
+            
+            FSett.close()
         except:
             return False
         return True
@@ -32,5 +28,5 @@ class TMPModel:
     # RunModel takes the market historical price chart in DPF and then does
     # the analysis using cuurent implementation (ARIMA, BB, LSTM, etc.) to provide a number of values 
     # characterising each historical tick of data (e.g., predictions, expectations, sentiments, etc.)
-    def RunModel(self, DPF, MPR):
-        # add here simple moving average implementation
+    def RunModel(self, DPF, MPR, MVF):
+        i = 0.0 # add here simple moving average implementation

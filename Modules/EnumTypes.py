@@ -2,6 +2,7 @@ from enum import Enum, auto
 
 # Enumerator for the inter-processes mesagging
 class FMsg(Enum):
+    PM_ECHO = auto()           # simple testing echo back
     PM_NONE = auto()           # none signal
     PM_SOTM_READY = auto()     # SOTM message to SGMM that its analysis cycle completed and results are ready
     PM_CASM_READY = auto()     # CASM message to SOTM that it finished its analysis and result are ready for SOTM to start
@@ -31,7 +32,7 @@ class FTotalEnergy():
     StuckCnt = 0                    # cycle counter for when energy is not decreasing
     StuckTimeout = 0                # now many cycles with unchanged Etot to wait before shaking variables
     Hist = []                       # history of the total energy variation as a function of cycle index
-    flgShakedVars = false           # has to be set true right after variables have been shaked
+    flgShakedVars = False           # has to be set true right after variables have been shaked
     
 
 class FVariable():
@@ -40,11 +41,11 @@ class FVariable():
     Name = ""                       # could be a short description or name
     flgOptimizeable = False         # whether variable can be changed
     ID = 0                          # a unique ID among both CASM and SOTM vars
-    LimMin,
+    LimMin = 0.0
     LimMax = 0.0                    # lower an upper numerical limits it can get
-    DefStep,                        # default step for the variation algorithm
-    CurrStep,                       # current step used for variation
-    MinStep,                        # smallest step allowed step for variation
+    DefStep = 0.0                   # default step for the variation algorithm
+    CurrStep = 0.0                  # current step used for variation
+    MinStep = 0.0                   # smallest step allowed step for variation
     MaxStep = 0.0                   # largest step allowed for variation
     Deriv = 0.0                     # Derivative of the error function for this var
     Corr = "CASM"                   # correspondence, either CASM or SOTM

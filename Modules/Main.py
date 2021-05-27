@@ -3,29 +3,33 @@ import CASM
 import SOTM
 import EnumTypes
 import sys
+from EnumTypes import FMsg as msg # message that is used to send to class instances from Main.py
+
+# ------------------------ VARIABLES ------------------------ 
+ 
 
 # create three instances that will work together on the trading model
-SGMM = TSGMM("SGMMerr.log", "SGMM.log")
-if SGMM.LastError !=  '':
-    print(SGMM.LastError)
+sgmm = SGMM.TSGMM("SGMMerr.log", "SGMM.log")
+if sgmm.FLastError !=  '':
+    print(sgmm.FLastError)
     print("Errors detected in SGMM, process stopped")
     sys.exit()
-CASM = TCASM("CASMerr.log", "CASM.log")
-if CASM.LastError !=  '':
-    print(CASM.LastError)
+casm = CASM.TCASM("CASMerr.log", "CASM.log")
+if casm.FLastError !=  '':
+    print(casm.FLastError)
     print("Errors detected in CASM, process stopped")
     sys.exit()
-SOTM = TSOTM("SOTMerr.log", "SOTM.log")
-if SOTM.LastError !=  '':
-    print(SOTM.LastError)
+sotm = SOTM.TSOTM("SOTMerr.log", "SOTM.log")
+if sotm.FLastError !=  '':
+    print(sotm.FLastError)
     print("Errors detected in SOTM, process stopped")
     sys.exit()
 
 # for correct functionality, these three instances need to know the communicating methods
-SGMM.MsgToCASM = CASM.ProcessMsg()
-SGMM.MsgToSOTM = SOTM.ProcessMsg()
-CASM.MsgToSOTM = SOTM.ProcessMsg()
-SOTM.MsgToSGMM = SGMM.ProcessMsg()
+sgmm.MsgToCASM = casm.ProcessMsg
+sgmm.MsgToSOTM = sotm.ProcessMsg
+casm.MsgToSOTM = sotm.ProcessMsg
+sotm.MsgToSGMM = sgmm.ProcessMsg
 
 # initiate start of the first cycle
-SGMM.ProcessMsg(PM_START)
+sgmm.ProcessMsg(msg.PM_START, None)

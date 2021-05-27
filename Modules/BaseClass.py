@@ -1,4 +1,5 @@
 import EnumTypes
+import BaseClass
 from datetime import datetime
 
 #==================================================================================================================
@@ -19,21 +20,24 @@ class TBaseClass(object):
     # The base functionality class declares the message-type interaction between the instances of different classes
     # The parent class shall implement its way of processing of the received messages
     def ProcessMsg(self, enum, param):
-    
+        i = 1.0
+        
     # For error logging purposes
     def LogError(self, _ErrorText):
         self.FLastError = _ErrorText
         f = open(self.FErrorLogFName, 'a') 
-        dt = now.strftime("%d/%m/%Y %H:%M:%S")
-        f.write(dt+'\t'+_ErrorText+'\n')
+        dt = datetime.now()
+        dtt = dt.strftime("%d/%m/%Y %H:%M:%S")
+        f.write(dtt+'\t'+_ErrorText+'\n')
         f.close
         
     # For events logging purposes, level 0 - most important info, level 1 - full debug info
     def Log(self, _Level, _LogText):
         # do not log everything if the self.LogLevel is setup for basic logging
-        if _Level == 1 and self.LogLevel == 0 return
+        if _Level == 1 and self.LogLevel == 0: return
         
         f = open(self.FEventLogName, 'a') 
-        dt = now.strftime("%d/%m/%Y %H:%M:%S")
-        f.write(dt+'\t'+_logText+'\n')
+        dt = datetime.now()
+        dtt = dt.strftime("%d/%m/%Y %H:%M:%S")
+        f.write(dtt+'\t'+_LogText+'\n')
         f.close

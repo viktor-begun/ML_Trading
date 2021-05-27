@@ -1,15 +1,16 @@
 import EnumTypes
 import BaseClass
 import TSModel
+from EnumTypes import FMsg as msg
 
-class TSOTM(TBaseClass):
+class TSOTM(BaseClass.TBaseClass):
     # ------------------------ VARIABLES ------------------------ 
     # upon creation an instance object of TSOTM class, its MsgToSGMM variable has to be assigned to SGMM.ProcessMsg() method
     # this way the TSOTM object can send messages to a TSGMM object
     MsgToSGMM = None
     
     # this is the trading simulation model
-    TSM = TTSModel()
+    TSM = TSModel.TTSModel()
     
     # Trading Signal File, in this implementation we will use lists, not the memory mapped files
     # CASM will be building this list and sending to SOTM for analysis
@@ -23,12 +24,14 @@ class TSOTM(TBaseClass):
     # ------------------------ METHODS ------------------------ 
     # Load settings
     def LoadSettings(self):
-       # here settSOTM.ini to be opened and parameter to be read
+        sett = None  # file variable 
+        
+        # here settSOTM.ini to be opened and parameter to be read
         try:
-            self.FSett = open('settSOTM.ini')
-            set1 = self.FSett.readline()
-            set2 = self.FSett.readline()
-            set3 = self.FSett.readline()
+            sett = open('settSOTM.ini')
+            
+            
+            sett.close()
         except:
             return False
         return True
@@ -46,17 +49,17 @@ class TSOTM(TBaseClass):
     #   param is any parameter a particular meggase may be accompanied with
     def ProcessMsg(self, enum, param):
         # initialize 
-        if  enum = PM_INIT:
+        if  enum == msg.PM_INIT:
             # do init. Note: in python __init__ is automatically called upon creating a class instance.
             # just in case we need to re-init, keep  this message
             __init__(self, "SOTMerr.log")
             
         # return last error
-        elif enum = PM_GETLASTERROR:
+        elif enum == msg.PM_GETLASTERROR:
             return self.FLastError
             
         # CASM gave us results, start virtual trading simulation
-        elif enum = PM_CASM_READY:
+        elif enum == msg.PM_CASM_READY:
             # by now, CASM should have finished writting into TSF and we ready to simulate trading
             # on the given history DPF. For this message param points to the CASM's TSF list
             self.TSF = param
@@ -64,5 +67,5 @@ class TSOTM(TBaseClass):
             self.TSM.RunModel()
             # once finished, the model will generate TDF list which we need to pass further to SGMM for 
             # analysis
-            self.MsgToSGMM(PM_SOTM_READY, TDF)
+            self.MsgToSGMM(msg.PM_SOTM_READY, self.TDF)
         
