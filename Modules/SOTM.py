@@ -2,6 +2,8 @@ import EnumTypes
 import BaseClass
 import TSModel
 from EnumTypes import FMsg as msg
+import threading
+import time
 
 class TSOTM(BaseClass.TBaseClass):
     # ------------------------ VARIABLES ------------------------ 
@@ -20,6 +22,8 @@ class TSOTM(BaseClass.TBaseClass):
     # of simulated trading entries on the current history DPP file. This will show when a given trade 
     # was made, how big was it, when it was closed and profit/loss amount
     TDF = []
+    
+    
     
     # ------------------------ METHODS ------------------------ 
     # Load settings
@@ -42,7 +46,26 @@ class TSOTM(BaseClass.TBaseClass):
         # read all settings for this optimization
         if not self.LoadSettings:
             self.LogError("Error while loading settings")
-            
+        # start self.Poll as a thread, it will be periodically checking for any pending messagges to serve
+        thread = threading.Thread(target=self.Poll, args=())
+        thread.daemon = True                            
+        thread.start()
+
+    def Poll(self):
+        # this will be polling the RecMsg variable that contains an unprocessed message
+        while True:
+            # CASM gave us results, start virtual trading simulation
+            if self.RecMsg == msg.PM_CASM_READY:
+                # test the obtained TSF in virtual trading on the given history DPP
+                self.TSM.RunModel()
+                self.Log(0, 'SOTM finished')
+                # once finished, the model will generate TDF list which we need to pass further to SGMM for 
+                # analysis
+                self.MsgToSGMM(msg.PM_SOTM_READY, self.TDF)
+                self.RecMsg = None
+            else:   
+                time.sleep(0.01)
+        
     # The base functionality class declares the message-type interaction between the instances of different classes
     # The parent class shall implement its way of processing of the received messages
     #   enum parameter is the Message it has received, see EnumTypes.py
@@ -63,9 +86,6 @@ class TSOTM(BaseClass.TBaseClass):
             # by now, CASM should have finished writting into TSF and we ready to simulate trading
             # on the given history DPF. For this message param points to the CASM's TSF list
             self.TSF = param
-            # test the obtained TSF in virtual trading on the given history DPP
-            self.TSM.RunModel()
-            # once finished, the model will generate TDF list which we need to pass further to SGMM for 
-            # analysis
-            self.MsgToSGMM(msg.PM_SOTM_READY, self.TDF)
+            # to avoid recursion just record the message we received and return. The rest will be handled by self.Poll()
+            self.RecMsg = enum
         

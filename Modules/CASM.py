@@ -2,6 +2,8 @@ import EnumTypes
 import BaseClass
 import MPModel
 from EnumTypes import FMsg as msg
+import threading
+import time
 
 class TCASM(BaseClass.TBaseClass):
     # ------------------------ VARIABLES ------------------------ 
@@ -31,6 +33,10 @@ class TCASM(BaseClass.TBaseClass):
         # init model that is used to predict market move (ARIMA etc.)
         if not self.MPM.InitModel():
             self.LogError("Failed to initialize Marker Prediction Model")
+        # start self.Poll as a thread, it will be periodically checking for any pending messagges to serve
+        thread = threading.Thread(target=self.Poll, args=())
+        thread.daemon = True                            
+        thread.start() 
     
     # Load settings
     def LoadSettings(self):
@@ -60,6 +66,26 @@ class TCASM(BaseClass.TBaseClass):
             return False
         return True        
     
+    def Poll(self):
+        # this will be polling the RecMsg variable that contains an unprocessed message
+        while True:
+            if self.RecMsg == msg.PM_CASMSTARTCYCLE:
+                # MPR - Market Prediction Results, the results of the MPModel to be written in this list by MPM.RunModel
+                MPR = []
+                # here the MPM should be called which will generate expectations on the market moving direction
+                # for every data point (except truncated start) using current implementation (ARIMA, MA, 
+                # Bollinger Bands, LSTM, etc.)
+                self.MPM.RunModel(self.DPF, MPR, self.MVF)
+                # after market move expectations have been generated, the trading signals (TSF) should be generated next
+                self.GenerateSignals(MPR)
+                self.Log(0, 'CASM finished')
+                # after trading signals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
+                self.MsgToSOTM(msg.PM_CASM_READY, self.TSF)
+                self.RecMsg = None
+            else:
+                time.sleep(0.01)
+            
+            
     # The base functionality class declares the message-type interaction between the instances of different classes
     # The parent class shall implement its way of processing of the received messages
     #   enum parameter is the Message it has received, see EnumTypes.py
@@ -80,18 +106,10 @@ class TCASM(BaseClass.TBaseClass):
             
         # SGMM asked to start a new cycle of signal generation
         elif enum == msg.PM_CASMSTARTCYCLE:
-            # MPR - Market Prediction Results, the results of the MPModel to be written in this list by MPM.RunModel
-            MPR = []
             # for this message the param is pointing to a DPF data pipe file, i.e., raw price historic chart
             self.DPF = param
-            # here the MPM should be called which will generate expectations on the market moving direction
-            # for every data point (except truncated start) using current implementation (ARIMA, MA, 
-            # Bollinger Bands, LSTM, etc.)
-            self.MPM.RunModel(self.DPF, MPR, self.MVF)
-            # after market move expectations have been generated, the trading signals (TSF) should be generated next
-            self.GenerateSignals(MPR)
-            # after trading signals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
-            self.MsgToSOTM(msg.PM_CASM_READY, self.TSF)
+            # to avoid recursion just record the message we received and return. The rest will be handled by self.Poll()
+            self.RecMsg = enum
         
     
     # Here, the trading signal for the given history will be generated and writtent to a TSF and SOTM object

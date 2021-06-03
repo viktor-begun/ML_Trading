@@ -11,7 +11,9 @@ class TBaseClass(object):
     FEventLogName = ''  # File name for events logging
     FLastError = ''     # Description of the last error occured
     FLogLevel = 0       # logging level, 0 is basic info, 1 is debugging
-
+    RecMsg = None       # Any message that has been received from another class instance and to be processed
+    
+    
     # Init any starting state
     def __init__(self, _FErrorLogFName, _FEventLongName):
         self.FErrorLogFName = _FErrorLogFName
