@@ -80,7 +80,7 @@ class TCASM(BaseClass.TBaseClass):
                 self.GenerateSignals(MPR)
                 self.Log(0, 'CASM finished')
                 # after trading signals (buy/sell/do nothing) have been generated, a message to SOTM object should be sent
-                self.MsgToSOTM(msg.PM_CASM_READY, self.TSF)
+                self.MsgToSOTM(msg.PM_CASM_READY, self.TSF, self.DPF, self.MVF)
                 self.RecMsg = None
             else:
                 time.sleep(0.01)
@@ -90,7 +90,7 @@ class TCASM(BaseClass.TBaseClass):
     # The parent class shall implement its way of processing of the received messages
     #   enum parameter is the Message it has received, see EnumTypes.py
     #   param is any parameter a particular meggase may be accompanied with
-    def ProcessMsg(self, enum, param):
+    def ProcessMsg(self, enum, param, param2):
         # initialize
         if  enum == msg.PM_INIT:
             # Market Prediction Results, the MPM model will write to this list the results of its analysis
@@ -108,6 +108,8 @@ class TCASM(BaseClass.TBaseClass):
         elif enum == msg.PM_CASMSTARTCYCLE:
             # for this message the param is pointing to a DPF data pipe file, i.e., raw price historic chart
             self.DPF = param
+            # update Model Variables File
+            self.MVF = param2
             # to avoid recursion just record the message we received and return. The rest will be handled by self.Poll()
             self.RecMsg = enum
         

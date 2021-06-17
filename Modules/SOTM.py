@@ -23,7 +23,11 @@ class TSOTM(BaseClass.TBaseClass):
     # was made, how big was it, when it was closed and profit/loss amount
     TDF = []
     
+    # Data Pipe File, raw trading history file/list. It is provided by CASM
+    DPF = []
     
+    # Model Variables File, all variables for the current implementation
+    MVF = []        
     
     # ------------------------ METHODS ------------------------ 
     # Load settings
@@ -57,7 +61,7 @@ class TSOTM(BaseClass.TBaseClass):
             # CASM gave us results, start virtual trading simulation
             if self.RecMsg == msg.PM_CASM_READY:
                 # test the obtained TSF in virtual trading on the given history DPP
-                self.TSM.RunModel()
+                self.TSM.RunModel(self.DPF, self.TSF, self.TDF, self.MVF)
                 self.Log(0, 'SOTM finished')
                 # once finished, the model will generate TDF list which we need to pass further to SGMM for 
                 # analysis
@@ -70,7 +74,7 @@ class TSOTM(BaseClass.TBaseClass):
     # The parent class shall implement its way of processing of the received messages
     #   enum parameter is the Message it has received, see EnumTypes.py
     #   param is any parameter a particular meggase may be accompanied with
-    def ProcessMsg(self, enum, param):
+    def ProcessMsg(self, enum, param, param2, param3):
         # initialize 
         if  enum == msg.PM_INIT:
             # do init. Note: in python __init__ is automatically called upon creating a class instance.
@@ -86,6 +90,11 @@ class TSOTM(BaseClass.TBaseClass):
             # by now, CASM should have finished writting into TSF and we ready to simulate trading
             # on the given history DPF. For this message param points to the CASM's TSF list
             self.TSF = param
+            # update addres of DPF
+            self.DPF = param2
+            # update address of MVF
+            self.MVF = param3
             # to avoid recursion just record the message we received and return. The rest will be handled by self.Poll()
             self.RecMsg = enum
+            
         
