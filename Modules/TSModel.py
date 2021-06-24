@@ -31,7 +31,8 @@ class TTSModel:
     FBolBandPeriod = 1      # Bollinger Band period
     FBBWeightSL = 0.0       # weight factor using BB indicator for Stop Loss
     FBBWeightTP = 0.0       # weight factor using BB indicator for Take Profit
-    FReduceSLPerc = 0.0     # max percentage on which SL levels can be reduced in order to accomodate a new order within FRiskPercent
+    FReduceSLPerc = 0.0     # max percentage on which SL levels can be reduced in order to accomodate a new order within
+    FRiskPercent = 0.0
 
     
     # ------------------------ METHODS ------------------------ 
